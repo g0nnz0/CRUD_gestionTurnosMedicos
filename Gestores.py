@@ -6,7 +6,7 @@ from clasesModelo import Paciente
 class GestorPacientes:
     def __init__(self, nombreArchivoPacientes: str):
         self.nombreArchivoPacientes = nombreArchivoPacientes
-        self.listaDePacientes = self._cargarListaPacientes()
+        self.listaDePacientes: list[Paciente] = self._cargarListaPacientes()
         
 
     def _cargarListaPacientes(self):
@@ -30,12 +30,34 @@ class GestorPacientes:
         except Exception as e:
             print(f"Ocurrio un error inesperado: {e}")
 
+    def _dni_valido(self, mensaje = "Ingrese el dni del paciente: ") -> str:
+        while True:
+            dni_validado = input(mensaje).strip()
+            if not dni_validado.isdigit() or len(dni_validado) < 7:
+                print("El dni tiene que ser numerico y tener al menos 7 digitos")
+                continue
+            return dni_validado
+    
+    def _es_dni_unico(self, dni) -> bool:
+        for paciente in self.listaDePacientes:
+            if dni == paciente.dni:
+                return False
+        return True
+
+
 
     def agregarPaciente(self):
-        pass
+            try:
+                dni_ingresado = self._dni_valido()
+                if not self._es_dni_unico(dni_ingresado):
+                    print("El dni ya existe")
+                    return
+            except Exception as e:
+                print(f"Ocurrio un error al cargar el dni: {e}")
 
     def listarPacientes(self):
         pass
 
     def modificarPaciente(self):
         pass
+
