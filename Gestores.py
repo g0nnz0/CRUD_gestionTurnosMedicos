@@ -1,5 +1,6 @@
 import pickle
 import os
+from clasesModelo import Fecha
 from clasesModelo import Paciente
 
 
@@ -30,6 +31,8 @@ class GestorPacientes:
         except Exception as e:
             print(f"Ocurrio un error inesperado: {e}")
 
+
+    #metodos auxiliares para validacion de dni
     def _dni_valido(self, mensaje = "Ingrese el dni del paciente: ") -> str:
         while True:
             dni_validado = input(mensaje).strip()
@@ -45,15 +48,50 @@ class GestorPacientes:
         return True
 
 
-
+    #CRUD: Create
     def agregarPaciente(self):
-            try:
-                dni_ingresado = self._dni_valido()
-                if not self._es_dni_unico(dni_ingresado):
-                    print("El dni ya existe")
-                    return
-            except Exception as e:
-                print(f"Ocurrio un error al cargar el dni: {e}")
+            
+            #valido dni
+            dni_ingresado = self._dni_valido()
+            if not self._es_dni_unico(dni_ingresado):
+                print("Ya existe un paciente con ese dni.")
+                return
+           
+            #valido nombre
+            while True:
+                try:
+                    nombre_ingresado = input("Ingrese el nombre del paciente: ").strip().title()
+                    if nombre_ingresado == "":
+                        print("Este campo no puede estar vacio")
+                        continue
+                    break
+                except Exception as e:
+                    print(f"Ocurrio un error inesperado al cargar el nombre: {e}")
+
+            #valido fecha de nacimiento
+            while True:
+                try:
+                    fecha_nac_ingresada = input("Ingrese la fecha de nacimiento del paciente con el siguiente formato DD/MM/AAAA: ")
+                    if not Fecha.es_fecha_valida(fecha_nac_ingresada):
+                        print(f"{fecha_nac_ingresada} no es una fecha valida, intentelo nuevamente")
+                        continue
+                    fecha_nac_valida = Fecha(fecha_nac_ingresada)
+                    break
+                except ValueError as e:
+                    print(f"Ocurrio un error: {e} - vuelva a intentarlo.")
+                except Exception as e:
+                    print(f"Ocurrio un error: {e} - vuelva a intentarlo.")
+
+
+
+            #valido obra social
+            obra_social_ingresada = input("Ingrese la obra social del paciente (si no ingresa nada se anotará como 'Particular': ").strip()
+
+
+            paciente = Paciente(dni_ingresado, nombre_ingresado, fecha_nac_valida, obra_social_ingresada)
+            self.listaDePacientes.append(paciente)
+            self._guardarListaPacientes()
+            
 
     def listarPacientes(self):
         pass
