@@ -48,6 +48,20 @@ class GestorPacientes:
         return True
 
 
+    #CRUD: Read
+    def listarPacientes(self):
+        if not self.listaDePacientes:
+            print("No hay pacientes cargados en este momento.")
+            return
+        for paciente in self.listaDePacientes:
+            print(paciente)
+
+    
+    def buscarClientePorDni(self):
+        pass
+
+
+
     #CRUD: Create
     def agregarPaciente(self):
             
@@ -93,9 +107,11 @@ class GestorPacientes:
             self._guardarListaPacientes()
             
 
-    def listarPacientes(self):
-        pass
+    
 
     def modificarPaciente(self):
         pass
 
+    
+    def eliminarCliente(self):
+        pass
