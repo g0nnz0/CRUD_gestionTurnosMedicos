@@ -113,6 +113,7 @@ class GestorPacientes:
             paciente = Paciente(dni_ingresado, nombre_ingresado, fecha_nac_valida, obra_social_ingresada)
             self.listaDePacientes.append(paciente)
             self._guardarListaPacientes()
+            print("Nuevo paciente agregado exitosamente.")
             
 
     
