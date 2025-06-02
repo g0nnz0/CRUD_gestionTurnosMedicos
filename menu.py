@@ -25,7 +25,7 @@ class Menu:
                 print(f"Opción no valida.")
         return int(opcion_seleccionada)
     
-menu = Menu(["hablar", "mostrar", "jugar"])
+menu = Menu(["Gestion de Pacientes", "Gestión de Médicos", "Gestión de turnos", "Salir"])
 
 menu.mostrarMenu()
     
