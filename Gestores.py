@@ -28,6 +28,7 @@ class GestorPacientes:
         try:
             with open(self.nombreArchivoPacientes, "wb") as f:
                 pickle.dump(self.listaDePacientes, f)
+                print("El archivo se guardó correctamente.")
         except Exception as e:
             print(f"Ocurrio un error inesperado: {e}")
 
@@ -56,9 +57,16 @@ class GestorPacientes:
         for paciente in self.listaDePacientes:
             print(paciente)
 
-    
-    def buscarClientePorDni(self):
-        pass
+    #CRUD: Read
+    def buscarPacientePorDni(self) -> Paciente:
+        dni_ingresado = self._dni_valido()
+        for paciente in self.listaDePacientes:
+            if dni_ingresado == paciente.dni:
+                print(f"Coincidencia exitosa.")
+                print(paciente)
+                return paciente
+        print(f"No se encontró paciente con dni: {dni_ingresado}.")
+        return None
 
 
 
@@ -99,7 +107,7 @@ class GestorPacientes:
 
 
             #valido obra social
-            obra_social_ingresada = input("Ingrese la obra social del paciente (si no ingresa nada se anotará como 'Particular': ").strip()
+            obra_social_ingresada = input("Ingrese la obra social del paciente (si no ingresa nada se anotará como 'Particular': ").strip().title()
 
 
             paciente = Paciente(dni_ingresado, nombre_ingresado, fecha_nac_valida, obra_social_ingresada)
@@ -108,10 +116,78 @@ class GestorPacientes:
             
 
     
-
+    #CRUD: Update
     def modificarPaciente(self):
-        pass
+        paciente_a_modificar = self.buscarPacientePorDni()
+        if not paciente_a_modificar:
+            return
+        
+        #modficar nombre
+        while True:
+            try:
+                paciente_nuevo_nombre = input(f"Ingrese el nuevo nombre del paciente. -Nombre actual: {paciente_a_modificar.nombre} - (si no quiere modificarlo presione Enter): ").strip()
+                if paciente_nuevo_nombre == "":
+                    print("No se modificó el nombre")
+                    break
+                if paciente_nuevo_nombre.isdigit():
+                    print("El nombre no puede tener numeros")
+                    continue
+                paciente_a_modificar.nombre = paciente_nuevo_nombre.title()
+                print(f"Modificacion de nombre exitosa. -Nuevo nombre: {paciente_a_modificar.nombre} -")
+            except Exception as e:
+                print(f"Ocurrio un error inesperado: {e}")
 
-    
-    def eliminarCliente(self):
-        pass
+        #modificar fecha de nacimiento
+        while True:
+            try:
+                nueva_fecha_nacimiento_ingresada = input(f"Ingrese la nueva fecha de nacimiento del paciente con formato DD/MM/AAAA -Fecha de nacimiento actual: {paciente_a_modificar.fechaNacimiento} - (si no quiere modificar presione Enter): ")
+                if nueva_fecha_nacimiento_ingresada == "":
+                    print("No se modificó la fecha de nacimiento.")
+                    break
+                if not Fecha.es_fecha_valida(nueva_fecha_nacimiento_ingresada):
+                    print(f"{nueva_fecha_nacimiento_ingresada} no es una fecha valida, intentelo nuevamente")
+                    continue
+                nueva_fecha_nac_valida = Fecha(nueva_fecha_nacimiento_ingresada)
+                paciente_a_modificar.fechaNacimiento = nueva_fecha_nac_valida
+                print(f"Modificación de fecha de nacimineto exitosa. -Nueva fecha de nacimiento: {paciente_a_modificar.fechaNacimiento}-")
+                break
+            except ValueError as e:
+                    print(f"Ocurrió un error: {e} - vuelva a intentarlo.")
+            except Exception as e:
+                    print(f"Ocurrió un error: {e} - vuelva a intentarlo.")
+        
+        #modificar obra social
+        nueva_obra_social_ingresada = input(f"Ingrese la nueva obra social -Obra social actual: {paciente_a_modificar.obraSocial}-(si no quiere modificar presione Enter): ").strip()
+        if nueva_obra_social_ingresada == "":
+            print("No se modificó la obra social")
+        if nueva_obra_social_ingresada:
+            paciente_a_modificar.obraSocial = nueva_obra_social_ingresada.title()
+            print(f"Modificación de obra social exitosa. -Nueva obra social: {paciente_a_modificar.obraSocial} -")
+
+        self._guardarListaPacientes()
+        print(f"Modificacion de paciente: {paciente_a_modificar.nombre} - Dni: {paciente_a_modificar.dni} - Fecha de nacimiento: {paciente_a_modificar.fechaNacimiento} - Obra social: {paciente_a_modificar.obraSocial} Exitosa!")
+
+            
+
+    #CRUD: Delete
+    def eliminarPaciente(self):
+        if not self.listaDePacientes:
+            print("No hay pacientes cargados")
+            return
+
+        dni_ingresado = self._dni_valido()
+        for paciente in self.listaDePacientes:
+            if dni_ingresado == paciente.dni:
+                print(f"Paciente encontrado: {paciente}")
+                opcion_seleccionada = input("Para confirmar la eliminación presione 'S', para cancelar presione 'N': ").strip().upper()
+                if opcion_seleccionada == 'S':
+                    self.listaDePacientes.remove(paciente)
+                    self._guardarListaPacientes()
+                    print(f"El paciente: {paciente}. Fué eliminado exitosamente de la base de datos.")
+                    break
+                elif opcion_seleccionada == 'N':
+                    print("No se efectuaron cambios.")
+                    return
+                else:
+                    print("Opción no valida. No se efectuaron cambios")
+

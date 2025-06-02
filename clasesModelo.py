@@ -50,11 +50,11 @@ class FechaHora:
 
 
 class Paciente:
-    def __init__(self, dni: str, nombre: str, fechaNacimiento: FechaHora, obraSocial: str = None):
+    def __init__(self, dni: str, nombre: str, fechaNacimiento: Fecha, obraSocial: str = None):
         self.dni = dni
         self.nombre = nombre
         self.fechaNacimiento = fechaNacimiento
-        self.obraSocial = obraSocial if obraSocial.strip().title() else "Particular"
+        self.obraSocial = obraSocial.strip().title() if obraSocial else "Particular"
       
 
     def __str__(self):
