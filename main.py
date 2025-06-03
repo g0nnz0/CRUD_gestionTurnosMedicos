@@ -41,15 +41,15 @@ class Main:
             submenu_medicos_opcion_seleccionada = submenu_medicos.pedirOpcionDeMenuValida()
             if submenu_medicos_opcion_seleccionada == 1:
                 self.gestor_medicos.listarMedicos()
-            if submenu_medicos_opcion_seleccionada == 2:
+            elif submenu_medicos_opcion_seleccionada == 2:
                 self.gestor_medicos.buscarMedicoPorMatricula()
-            if submenu_medicos_opcion_seleccionada == 3:
+            elif submenu_medicos_opcion_seleccionada == 3:
                 self.gestor_medicos.agregarMedico()
-            if submenu_medicos_opcion_seleccionada == 4:
+            elif submenu_medicos_opcion_seleccionada == 4:
                 self.gestor_medicos.modificarMedico()
-            if submenu_medicos_opcion_seleccionada == 5:
+            elif submenu_medicos_opcion_seleccionada == 5:
                 self.gestor_medicos.eliminarMedico()
-            if submenu_medicos_opcion_seleccionada == 6:
+            elif submenu_medicos_opcion_seleccionada == 6:
                 self.gestor_medicos._guardarListaMedicos()
             elif submenu_medicos_opcion_seleccionada == 7:
                 break
@@ -63,7 +63,7 @@ class Main:
 
             if menu_principal_opcion_seleccionada == 1:
                 self._submenuGestionPacientes()
-            if menu_principal_opcion_seleccionada == 2:
+            elif menu_principal_opcion_seleccionada == 2:
                 self._submenuGestionMedicos()
             elif menu_principal_opcion_seleccionada == 3:
                 print("\n Hasta luego!")
