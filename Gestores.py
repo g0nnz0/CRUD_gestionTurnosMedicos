@@ -1,8 +1,10 @@
 import pickle
 import os
 from clasesModelo import Fecha
+from clasesModelo import FechaHora
 from clasesModelo import Paciente
 from clasesModelo import Medico
+from clasesModelo import Turno
 
 
 class GestorPacientes:
@@ -349,6 +351,40 @@ class GestorMedicos:
                 return
             else:
                 print("Opción no valida. No se efectuaron cambios")
+
+
+
+class GestorTurnos:
+    def __init__(self, nombreArchivoTurnos: str):
+        self.nombreArchivoTurnos = nombreArchivoTurnos
+        self.listaDeTurnos: list[Turno] = self._cargarListaTurnos()
+        self.gestorPacientes = GestorPacientes("pacientes.bin")
+        self.gestorMedicos = GestorMedicos("medicos.bin")
+
+
+    def _cargarListaTurnos(self):
+        if not os.path.exists(self.nombreArchivoTurnos):
+            print(f"No se encontró el archivo {self.nombreArchivoTurnos}. Se inicializa vacio")
+            return []
+
+        try:
+            with open(self.nombreArchivoTurnos, "rb") as f:
+                return pickle.load(f)
+        except (EOFError, pickle.UnpicklingError):
+            print(f"El archivo {self.nombreArchivoTurnos} se inicializa vacio.")
+            return []
+        except Exception as e:
+            print(f"Ocurrio un error inesperado: {e}")
+
+
+
+    def _guardarListaTurnos(self):
+        try:
+            with open(self.nombreArchivoTurnos, "wb") as f:
+                pickle.dump(self.listaDeTurnos, f)
+                print("El archivo se guardó correctamente")
+        except Exception as e:
+            print(f"Ocurrio un error inesperado: {e}")
 
 
 
