@@ -64,10 +64,10 @@ class Paciente:
 
 
 class Medico:
-    def __init__(self, matricula: str, nombre: str, especialidad: str):
+    def __init__(self, matricula: str, nombre: str, especialidad: str = None):
         self.matricula = matricula
         self.nombre = nombre
-        self.especialidad = especialidad
+        self.especialidad = especialidad.strip().title() if especialidad else "Clinico"
 
     def __str__(self):
         return f"Medico: {self.nombre} - Matricula n°: {self.matricula} - Especialidad: {self.especialidad}"

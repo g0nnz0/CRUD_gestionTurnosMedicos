@@ -2,6 +2,7 @@ import pickle
 import os
 from clasesModelo import Fecha
 from clasesModelo import Paciente
+from clasesModelo import Medico
 
 
 class GestorPacientes:
@@ -11,13 +12,14 @@ class GestorPacientes:
         
 
     def _cargarListaPacientes(self):
+        
+        if not os.path.exists(self.nombreArchivoPacientes):
+            print(f"No se encontró el archivo {self.nombreArchivoPacientes}. Se inicializa vacio")
+            return []
         try:
-            if not os.path.exists(self.nombreArchivoPacientes):
-                print(f"No se encontró el archivo {self.nombreArchivoPacientes}. Se inicializa vacio")
-                return []
             with open(self.nombreArchivoPacientes, "rb") as f:
                 return pickle.load(f)
-        except EOFError:
+        except (EOFError, pickle.UnpicklingError):
             print(f"El archivo {self.nombreArchivoPacientes} se inicializa vacio.")
             return []
         except Exception as e:
@@ -205,4 +207,86 @@ class GestorPacientes:
                 else:
                     print("Opción no valida. No se efectuaron cambios")
 
-gest = GestorPacientes("pacientes.bin")
+
+
+class GestorMedicos:
+    def __init__(self, nombreArchivoMedicos: str):
+        self.nombreArchivoMedicos = nombreArchivoMedicos
+        self.listaDeMedicos: list[Medico] = self._cargarListaMedicos()
+
+
+    def _cargarListaMedicos(self):
+        
+        if not os.path.exists(self.nombreArchivoMedicos):
+            print(f"No se encontró el archivo {self.nombreArchivoMedicos}. Se inicializa vacio")
+            return []
+        try:
+            with open(self.nombreArchivoMedicos, "rb") as f:
+                return pickle.load(f)
+        except EOFError:
+            print(f"El archivo {self.nombreArchivoMedicos} se inicializa vacio.")
+            return []
+        except Exception as e:
+            print(f"Ocurrio un error inesperado: {e}")
+    
+    def _guardarListaMedicos(self):
+        try:
+            with open(self.nombreArchivoMedicos, "wb") as f:
+                pickle.dump(self.listaDeMedicos, f)
+                print("El archivo se guardó correctamente.")
+        except Exception as e:
+            print(f"Ocurrio un error inesperado: {e}")
+
+
+     #metodos auxiliares para validacion de matricula
+    def _matricula_valida(self, mensaje = "Ingrese la matricula del medico: ") -> str:
+        while True:
+            matricula_validada = input(mensaje).strip()
+            if len(matricula_validada) < 6:
+                print("La matricula debe tener al menos tener al menos 6 digitos")
+                continue
+            return matricula_validada
+    
+    def _es_matricula_unica(self, matricula) -> bool:
+        for medico in self.listaDeMedicos:
+            if matricula == medico.matricula:
+                return False
+        return True
+
+
+
+    def listarMedicos(self):
+        if not self.listaDeMedicos:
+            print("No hay medicos cargados en este momento.")
+            return
+        for medico in self.listaDeMedicos:
+            print(medico)
+
+
+    def buscarMedicoPorMatricula(self) -> Medico:
+        matricula_ingresada = self._matricula_valida()
+        for medico in self.listaDeMedicos:
+            if matricula_ingresada == medico.matricula:
+                print(f"Coincidencia exitosa.")
+                print(medico)
+                return medico
+        print(f"No se encontró medico con matricula: {matricula_ingresada}.")
+        return None
+
+
+    def agregarMedico(self):
+        print("agregarMedico - alcanzado")
+        pass
+
+
+    def modificarMedico(self):
+        print("modificarMedico - alcanzado")
+        pass
+
+
+    def eliminarMedico(self):
+        print("eliminarMedico - alcanzado")
+        pass
+
+
+
