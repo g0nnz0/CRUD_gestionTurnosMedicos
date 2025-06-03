@@ -191,21 +191,18 @@ class GestorPacientes:
             print("No hay pacientes cargados")
             return
 
-        dni_ingresado = self._dni_valido()
-        for paciente in self.listaDePacientes:
-            if dni_ingresado == paciente.dni:
-                print(f"Paciente encontrado: {paciente}")
-                opcion_seleccionada = input("Para confirmar la eliminación presione 'S', para cancelar presione 'N': ").strip().upper()
-                if opcion_seleccionada == 'S':
-                    self.listaDePacientes.remove(paciente)
-                    self._guardarListaPacientes()
-                    print(f"El paciente: {paciente}. Fué eliminado exitosamente de la base de datos.")
-                    break
-                elif opcion_seleccionada == 'N':
-                    print("No se efectuaron cambios.")
-                    return
-                else:
-                    print("Opción no valida. No se efectuaron cambios")
+        paciente_ingresado = self.buscarPacientePorDni()
+        if paciente_ingresado:
+            opcion_seleccionada = input("Para confirmar la eliminación presione 'S', para cancelar presione 'N': ").strip().upper()
+            if opcion_seleccionada == 'S':
+                self.listaDePacientes.remove(paciente_ingresado)
+                self._guardarListaPacientes()
+                print(f"El {paciente_ingresado}. Fué eliminado exitosamente de la base de datos.")
+            elif opcion_seleccionada == 'N':
+                print("No se efectuaron cambios.")
+                return
+            else:
+                print("Opción no valida. No se efectuaron cambios")
 
 
 
@@ -340,21 +337,18 @@ class GestorMedicos:
             print("No hay medicos cargados")
             return
 
-        matricula_ingresada = self._matricula_valida()
-        for medico in self.listaDeMedicos:
-            if matricula_ingresada == medico.matricula:
-                print(f"Medico encontrado: {medico}")
-                opcion_seleccionada = input("Para confirmar la eliminación presione 'S', para cancelar presione 'N': ").strip().upper()
-                if opcion_seleccionada == 'S':
-                    self.listaDeMedicos.remove(medico)
-                    self._guardarListaMedicos()
-                    print(f"El medico: {medico}. Fué eliminado exitosamente de la base de datos.")
-                    break
-                elif opcion_seleccionada == 'N':
-                    print("No se efectuaron cambios.")
-                    return
-                else:
-                    print("Opción no valida. No se efectuaron cambios")
+        medico_ingresado = self.buscarMedicoPorMatricula()
+        if medico_ingresado:
+            opcion_seleccionada = input("Para confirmar la eliminación presione 'S', para cancelar presione 'N': ").strip().upper()
+            if opcion_seleccionada == 'S':
+                self.listaDeMedicos.remove(medico_ingresado)
+                self._guardarListaMedicos()
+                print(f"El {medico_ingresado}. Fué eliminado exitosamente de la base de datos.")
+            elif opcion_seleccionada == 'N':
+                print("No se efectuaron cambios.")
+                return
+            else:
+                print("Opción no valida. No se efectuaron cambios")
 
 
 
