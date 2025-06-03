@@ -275,18 +275,86 @@ class GestorMedicos:
 
 
     def agregarMedico(self):
-        print("agregarMedico - alcanzado")
-        pass
+            
+            matricula_ingresada = self._matricula_valida()
+            if not self._es_matricula_unica(matricula_ingresada):
+                print("Ya existe un medico con esa matricula.")
+                return
+           
+            
+            while True:
+                try:
+                    nombre_ingresado = input("Ingrese el nombre del medico: ").strip().title()
+                    if nombre_ingresado == "":
+                        print("Este campo no puede estar vacio")
+                        continue
+                    break
+                except Exception as e:
+                    print(f"Ocurrio un error inesperado al cargar el nombre: {e}")
+
+
+            especialidad_ingresada = input("Ingrese la especialidad del medico (si no ingresa nada se anotará como 'Clinico': ").strip().title()
+
+            medico = Medico(matricula_ingresada, nombre_ingresado, especialidad_ingresada)
+            self.listaDeMedicos.append(medico)
+            self._guardarListaMedicos()
+            print("Nuevo medico agregado exitosamente.")
+            print(f"Nombre: {medico.nombre} - Matricula {medico.matricula} - Especialidad: {medico.especialidad}")
+
 
 
     def modificarMedico(self):
-        print("modificarMedico - alcanzado")
-        pass
+        medico_a_modificar = self.buscarMedicoPorMatricula()
+        if not medico_a_modificar:
+            return
+        
+        #modficar nombre
+        while True:
+            try:
+                medico_nuevo_nombre = input(f"Ingrese el nuevo nombre del medico. -Nombre actual: {medico_a_modificar.nombre} - (si no quiere modificarlo presione Enter): ").strip()
+                if medico_nuevo_nombre == "":
+                    print("No se modificó el nombre")
+                    break
+                if medico_nuevo_nombre.isdigit():
+                    print("El nombre no puede tener numeros")
+                    continue
+                medico_a_modificar.nombre = medico_nuevo_nombre.title()
+                print(f"Modificacion de nombre exitosa. -Nuevo nombre: {medico_a_modificar.nombre} -")
+                break
+            except Exception as e:
+                print(f"Ocurrio un error inesperado: {e}")
 
+        
+        #modificar especialidad
+        nueva_especialidad = input(f"Ingrese la nueva Especialidad - Especialidad actual: {medico_a_modificar.especialidad}-(si no quiere modificar presione Enter): ").strip()
+        if nueva_especialidad == "":
+            print("No se modificó especialidad")
+        medico_a_modificar.especialidad = nueva_especialidad.title()
+        print(f"Modificación de especialidad exitosa. -Nueva especialidad: {medico_a_modificar.especialidad} -")
+
+        self._guardarListaMedicos()
+        print(f"Modificacion de medico: {medico_a_modificar.nombre} - Matricula {medico_a_modificar.matricula} - Especialidad: {medico_a_modificar.especialidad} Exitosa!")
 
     def eliminarMedico(self):
-        print("eliminarMedico - alcanzado")
-        pass
+        if not self.listaDeMedicos:
+            print("No hay medicos cargados")
+            return
+
+        matricula_ingresada = self._matricula_valida()
+        for medico in self.listaDeMedicos:
+            if matricula_ingresada == medico.matricula:
+                print(f"Medico encontrado: {medico}")
+                opcion_seleccionada = input("Para confirmar la eliminación presione 'S', para cancelar presione 'N': ").strip().upper()
+                if opcion_seleccionada == 'S':
+                    self.listaDeMedicos.remove(medico)
+                    self._guardarListaMedicos()
+                    print(f"El medico: {medico}. Fué eliminado exitosamente de la base de datos.")
+                    break
+                elif opcion_seleccionada == 'N':
+                    print("No se efectuaron cambios.")
+                    return
+                else:
+                    print("Opción no valida. No se efectuaron cambios")
 
 
 
