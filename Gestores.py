@@ -47,6 +47,26 @@ class GestorPacientes:
             if dni == paciente.dni:
                 return False
         return True
+    
+    #metodos aux para validar fecha reforzando los metodos de la class Fecha y manteniendo division de responsabilidades
+    def _es_fecha_nacimiento_valida(self, fecha_str: str) -> bool:
+        try:
+            #Acá le delego a al constructor que verifique si fecha_str está bien formateada
+            Fecha(fecha_str)
+            #si lo está me devuelve True, el cual voy a usar como condicion en la funcion de abajo
+            return True
+        except ValueError:
+            #Si el constructor de Fecha detecta un error, saltará acá, devolviendome False
+            return False
+    
+    def _pedir_fecha_nacimiento_valida(self) -> Fecha:
+        #acá hay una estructura similar a la que usé en la clase Menu, una especie de do while
+        fecha_nacimiento_ingresada = "NO_VALIDA"
+        while not self._es_fecha_nacimiento_valida(fecha_nacimiento_ingresada):
+            fecha_nacimiento_ingresada = input("Ingrese la fecha de nacimiento del paciente (dd/mm/aaaa): ")
+            if not self._es_fecha_nacimiento_valida(fecha_nacimiento_ingresada):
+                print("Formato de fecha invalido. Debe ser dd/mm/aaaa")
+        return Fecha(fecha_nacimiento_ingresada)
 
 
     #CRUD: Read
@@ -91,18 +111,11 @@ class GestorPacientes:
                     print(f"Ocurrio un error inesperado al cargar el nombre: {e}")
 
             #valido fecha de nacimiento
-            while True:
-                try:
-                    fecha_nac_ingresada = input("Ingrese la fecha de nacimiento del paciente con el siguiente formato DD/MM/AAAA: ")
-                    if not Fecha.es_fecha_valida(fecha_nac_ingresada):
-                        print(f"{fecha_nac_ingresada} no es una fecha valida, intentelo nuevamente")
-                        continue
-                    fecha_nac_valida = Fecha(fecha_nac_ingresada)
-                    break
-                except ValueError as e:
-                    print(f"Ocurrio un error: {e} - vuelva a intentarlo.")
-                except Exception as e:
-                    print(f"Ocurrio un error: {e} - vuelva a intentarlo.")
+            #Arreglé el bug, estaba llamando metodos de la clase Fecha directamente desde acá
+            #si bien validaban el str fecha, no los devolvian, y me hacia ruido tener que poner self como argumento
+            #y claro, era porque no era ni una instancia, estaba accediendo directamente a la clase fecha
+            #cuando como mucho tengo que usar su constructor(como el los metodos auxiliares para pedir fecha de este gestor)
+            fecha_nac_valida = self._pedir_fecha_nacimiento_valida()
 
 
 
@@ -192,3 +205,4 @@ class GestorPacientes:
                 else:
                     print("Opción no valida. No se efectuaron cambios")
 
+gest = GestorPacientes("pacientes.bin")

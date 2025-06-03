@@ -4,8 +4,8 @@ class Menu:
             raise ValueError("El parámetro opciones debe ser una lista de opciones")
         self.opciones_menu = opciones
 
-    def mostrarMenu(self):
-        print("\n---MENU PRINCIPAL---")
+    def mostrarMenu(self, tituloMenu: str = "menú principal"):
+        print(f"\n---{tituloMenu.upper().strip()}---")
         #usé enumerate para poder obtener el indice y usarlo en print como numerador
         #por eso el for tiene dos variables, i(indice) y opcion
         for i, opcion in enumerate(self.opciones_menu, start=1):
@@ -24,8 +24,4 @@ class Menu:
             if not opcion_seleccionada.isdigit() or int(opcion_seleccionada) not in range(1, num_opciones + 1):
                 print(f"Opción no valida.")
         return int(opcion_seleccionada)
-    
-menu = Menu(["Gestion de Pacientes", "Gestión de Médicos", "Gestión de turnos", "Salir"])
-
-menu.mostrarMenu()
     
