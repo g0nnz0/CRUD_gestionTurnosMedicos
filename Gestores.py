@@ -358,6 +358,7 @@ class GestorTurnos:
     def __init__(self, nombreArchivoTurnos: str):
         self.nombreArchivoTurnos = nombreArchivoTurnos
         self.listaDeTurnos: list[Turno] = self._cargarListaTurnos()
+        #implemento inyeccion de dependecias
         self.gestorPacientes = GestorPacientes("pacientes.bin")
         self.gestorMedicos = GestorMedicos("medicos.bin")
 
@@ -386,5 +387,32 @@ class GestorTurnos:
         except Exception as e:
             print(f"Ocurrio un error inesperado: {e}")
 
+
+    def evitarSolapamientoTurnos(self):
+        print("evitarSolapamientoTurnos alcanzada")
+        pass
+
+    def listarTurnos(self):
+        print("listarTurnos alcanzado")
+        pass
+
+    def listarTurnoPorPacienteOMedico(self):
+        print("listarTurnoPorPacienteOMedico alcanzado")
+        pass
+
+    def buscarTurnoPorFecha(self):
+        print("buscarTurnoPorFecha alcanzado")
+        pass
+
+
+    def apgregarTurno(self):
+        print("agregarTurno alcanzado")
+        pass
+
+    def eliminarTurno(self):
+        print("EliminarTurno alcanzado")
+        pass
+
+    
 
 
