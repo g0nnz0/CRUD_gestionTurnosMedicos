@@ -415,34 +415,55 @@ class GestorTurnos:
         fecha_y_hora_ingresada = self._pedir_fecha_y_hora_valida()
 
         #busqueda de paciente usando metodos del gestor de pacientes
-        dni_ingresado = self.gestor_pacientes.buscarPacientePorDni()
-        if not dni_ingresado:
+        paciente_encontrado_por_dni = self.gestor_pacientes.buscarPacientePorDni()
+        if not paciente_encontrado_por_dni:
             print(f"No se encontró el paciente. Debe registrarlo desde el menú Gestión de Pacientes.")
             return
+        dni_obtenido = paciente_encontrado_por_dni.dni
         
         #busqueda del medico usando metodos del gestor de medicos
-        matricula_ingresada = self.gestor_medicos.buscarMedicoPorMatricula()
-        if not matricula_ingresada:
+        medico_encontrado_por_matricula = self.gestor_medicos.buscarMedicoPorMatricula()
+        if not medico_encontrado_por_matricula:
             print(f"No se encontró el medico. Debe registrarlo desde el menú Gestión de Medicos.")
             return
+        matricula_obtenida = medico_encontrado_por_matricula.matricula
         
-        motivo_ingresado = input("Ingrese el motivo de su turno: ")
-
-        turno = Turno(fecha_y_hora_ingresada, dni_ingresado, matricula_ingresada, motivo_ingresado)
-        self.listaDeTurnos.append(turno)
-
-        
-
-
+        while True:
+            motivo_ingresado = input("Ingrese el motivo de su turno: ").strip()
+            if motivo_ingresado == "":
+                print("Este campo no puede estar vacio")
+                continue
+            break
 
 
-    def evitarSolapamientoTurnos(self):
-        print("evitarSolapamientoTurnos alcanzada")
-        pass
+        nuevo_turno = Turno(fecha_y_hora_ingresada, dni_obtenido, matricula_obtenida, motivo_ingresado)
+        #muestro al usuario la lista de turnos
+        self.listarTurnos()
+        #recorro la lista buscando coincidencia entre horarios
+        for turno in self.listaDeTurnos:
+            if fecha_y_hora_ingresada == turno.fechaYHora and matricula_obtenida == turno.medicoMatricula:
+                print("Este medico ya tiene un turno en este horario: ")
+                print(turno)
+                print("Deberá repetir la operación.")
+                return
+        #si no hubo coincidencias, agrego el turno a la lista
+        self.listaDeTurnos.append(nuevo_turno)
+        self._guardarListaTurnos()
+        print(f"El turno {nuevo_turno}")
+        print("Se añadio correctamente")
+
+
+    #pensé que podia encapsular la logica para evitar el solapamiento, pero por ahora lo dejo asi
+    #def evitarSolapamientoTurnos(self):
+    #    print("evitarSolapamientoTurnos alcanzada")
+    #    pass
 
     def listarTurnos(self):
-        print("listarTurnos alcanzado")
-        pass
+        if not self.listaDeTurnos:
+            print("No hay turnos cargados en este momento.")
+            return
+        for turno in self.listaDeTurnos:
+            print(turno)
 
     def listarTurnoPorPacienteOMedico(self):
         print("listarTurnoPorPacienteOMedico alcanzado")
@@ -459,6 +480,14 @@ class GestorTurnos:
         print("EliminarTurno alcanzado")
         pass
 
+
+
+#pruebas
+#gestMed = GestorMedicos("medicos.bin")
+#gestPac = GestorPacientes("pacientes.bin")
+
+#gestTur = GestorTurnos("turnos.bin", gestPac, gestMed)
+#gestTur._cargarListaTurnos()
 
 
 
