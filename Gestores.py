@@ -364,6 +364,14 @@ class GestorTurnos:
         self.listaDeTurnos: list[Turno] = self._cargarListaTurnos()
         self.gestor_pacientes = gestor_pacientes
         self.gestor_medicos = gestor_medicos
+        if not self.listaDeTurnos:
+            self.proximo_id = 1
+        else:
+            max_id = 0
+            for turno in self.listaDeTurnos:
+                if turno.id > max_id:
+                    max_id = turno.id
+            self.proximo_id = max_id + 1
 
 
     def _cargarListaTurnos(self):
@@ -451,10 +459,11 @@ class GestorTurnos:
                 print(turno)
                 print("Deberá repetir la operación.")
                 return
-        #si no hubo coincidencias, instancio un nuevo turno y lo agrego a la lista de turnos
-        nuevo_turno = Turno(fecha_y_hora_ingresada, dni_obtenido, matricula_obtenida, motivo_ingresado)
+        #si no hubo coincidencias, instancio un nuevo turno, le agrgo el proximo_id autogenerado y lo agrego a la lista de turnos
+        nuevo_turno = Turno(fecha_y_hora_ingresada, dni_obtenido, matricula_obtenida, motivo_ingresado, self.proximo_id)
         self.listaDeTurnos.append(nuevo_turno)
         self._guardarListaTurnos()
+        self.proximo_id += 1
         print(f"El turno {nuevo_turno}")
         print("Se añadio correctamente")
 

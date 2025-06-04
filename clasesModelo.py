@@ -78,11 +78,12 @@ class Medico:
 
 
 class Turno:
-    def __init__(self, fechaYHora: FechaHora, pacienteDni: str, medicoMatricula: str, MotivoTurno: str):
+    def __init__(self, fechaYHora: FechaHora, pacienteDni: str, medicoMatricula: str, MotivoTurno: str, id: int):
         self.fechaYHora = fechaYHora
         self.pacienteDni = pacienteDni
         self.medicoMatricula = medicoMatricula
         self.motivoTurno = MotivoTurno
+        self.id = id
 
     def __str__(self):
-        return f"Horario turno: {self.fechaYHora} - Paciente dni: {self.pacienteDni} - Medico matricula n°: {self.medicoMatricula} - Motivo del Turno: {self.motivoTurno}"
+        return f"Id: {self.id} - Horario turno: {self.fechaYHora} - Paciente dni: {self.pacienteDni} - Medico matricula n°: {self.medicoMatricula} - Motivo del Turno: {self.motivoTurno}"
