@@ -26,6 +26,7 @@ class GestorPacientes:
             return []
         except Exception as e:
             print(f"Ocurrio un error inesperado: {e}")
+            return []
 
 
     def _guardarListaPacientes(self):
@@ -227,6 +228,7 @@ class GestorMedicos:
             return []
         except Exception as e:
             print(f"Ocurrio un error inesperado: {e}")
+            return []
     
     def _guardarListaMedicos(self):
         try:
@@ -355,12 +357,13 @@ class GestorMedicos:
 
 
 class GestorTurnos:
-    def __init__(self, nombreArchivoTurnos: str):
+    #en este caso implemento inyeccion de dependecias
+    #(tambien aprendí que puedo pasar los gestores como string, para codigos mas modulares, en este caso no hace falta)
+    def __init__(self, nombreArchivoTurnos: str, gestor_pacientes: GestorPacientes, gestor_medicos: GestorMedicos):
         self.nombreArchivoTurnos = nombreArchivoTurnos
         self.listaDeTurnos: list[Turno] = self._cargarListaTurnos()
-        #implemento inyeccion de dependecias
-        self.gestorPacientes = GestorPacientes("pacientes.bin")
-        self.gestorMedicos = GestorMedicos("medicos.bin")
+        self.gestor_pacientes = gestor_pacientes
+        self.gestor_medicos = gestor_medicos
 
 
     def _cargarListaTurnos(self):
@@ -376,6 +379,7 @@ class GestorTurnos:
             return []
         except Exception as e:
             print(f"Ocurrio un error inesperado: {e}")
+            return []
 
 
 
@@ -386,6 +390,50 @@ class GestorTurnos:
                 print("El archivo se guardó correctamente")
         except Exception as e:
             print(f"Ocurrio un error inesperado: {e}")
+
+    #metodos auxiliares
+    #ambos son modificaciones de las validaciones para fecha del gestorPacientes
+    def _es_fecha_y_hora_valida(self, fecha_y_hora_str: str) -> bool:
+        try:
+            FechaHora(fecha_y_hora_str)
+            return True
+        except ValueError:
+            return False
+    
+    def _pedir_fecha_y_hora_valida(self) -> FechaHora:
+        fecha_y_hora_ingresada = "NO_VALIDA"
+        while not self._es_fecha_y_hora_valida(fecha_y_hora_ingresada):
+            fecha_y_hora_ingresada = input("Ingrese la fecha y la hora del turno ('dd/mm/aaaa HH:MM'): ")
+            if not self._es_fecha_y_hora_valida(fecha_y_hora_ingresada):
+                print("Formato de fecha y hora invalido. Debe ser dd/mm/aaaa HH:MM")
+        return FechaHora(fecha_y_hora_ingresada)
+
+
+    #ES BOCETO AUN, REVISAR
+    def agregarTurno(self):
+        #aca la peticion de fecha y hora es sencilla porque toda la validacion está en los metodos aux
+        fecha_y_hora_ingresada = self._pedir_fecha_y_hora_valida()
+
+        #busqueda de paciente usando metodos del gestor de pacientes
+        dni_ingresado = self.gestor_pacientes.buscarPacientePorDni()
+        if not dni_ingresado:
+            print(f"No se encontró el paciente. Debe registrarlo desde el menú Gestión de Pacientes.")
+            return
+        
+        #busqueda del medico usando metodos del gestor de medicos
+        matricula_ingresada = self.gestor_medicos.buscarMedicoPorMatricula()
+        if not matricula_ingresada:
+            print(f"No se encontró el medico. Debe registrarlo desde el menú Gestión de Medicos.")
+            return
+        
+        motivo_ingresado = input("Ingrese el motivo de su turno: ")
+
+        turno = Turno(fecha_y_hora_ingresada, dni_ingresado, matricula_ingresada, motivo_ingresado)
+        self.listaDeTurnos.append(turno)
+
+        
+
+
 
 
     def evitarSolapamientoTurnos(self):
@@ -405,14 +453,12 @@ class GestorTurnos:
         pass
 
 
-    def apgregarTurno(self):
-        print("agregarTurno alcanzado")
-        pass
+    
 
     def eliminarTurno(self):
         print("EliminarTurno alcanzado")
         pass
 
-    
+
 
 
