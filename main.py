@@ -1,12 +1,14 @@
 from Menu import Menu
 from Gestores import GestorPacientes
 from Gestores import GestorMedicos
+from Gestores import GestorTurnos
 
 class Main:
     def __init__(self):
-        self.menu_principal = Menu(["Gestión de pacientes", "Gestión de medicos", "Salir"])
+        self.menu_principal = Menu(["Gestión de pacientes", "Gestión de medicos", "Gestión de turnos", "Salir"])
         self.gestor_pacientes = GestorPacientes("pacientes.bin")
         self.gestor_medicos = GestorMedicos("medicos.bin")
+        self.gestor_turnos = GestorTurnos("turnos.bin", self.gestor_pacientes, self.gestor_medicos)
 
     
     def _submenuGestionPacientes(self):
@@ -54,6 +56,27 @@ class Main:
             elif submenu_medicos_opcion_seleccionada == 7:
                 break
 
+    def _submenuGestionTurnos(self):
+        submenu_turnos = Menu(["Listar turnos", "Buscar turno por fecha", "Agregar turno", "Eliminar turno", "Guardar cambios", "Volver al menu principal"])
+
+        while True:
+            submenu_turnos.mostrarMenu("gestión turnos")
+
+            submenu_turnos_opcion_seleccionada = submenu_turnos.pedirOpcionDeMenuValida()
+            if submenu_turnos_opcion_seleccionada == 1:
+                self.gestor_turnos.listarTurnos()
+            elif submenu_turnos_opcion_seleccionada == 2:
+                self.gestor_turnos.buscarTurnoPorFecha()
+            elif submenu_turnos_opcion_seleccionada == 3:
+                self.gestor_turnos.agregarTurno()
+            elif submenu_turnos_opcion_seleccionada == 4:
+                self.gestor_turnos.eliminarTurno()
+            elif submenu_turnos_opcion_seleccionada == 5:
+                self.gestor_turnos._guardarListaTurnos()
+            elif submenu_turnos_opcion_seleccionada == 6:
+                break
+
+
 
     
     def ejecutar(self):
@@ -66,6 +89,8 @@ class Main:
             elif menu_principal_opcion_seleccionada == 2:
                 self._submenuGestionMedicos()
             elif menu_principal_opcion_seleccionada == 3:
+                self._submenuGestionTurnos()
+            elif menu_principal_opcion_seleccionada == 4:
                 print("\n Hasta luego!")
                 break
             

@@ -90,7 +90,7 @@ class GestorPacientes:
                 print(f"Coincidencia exitosa.")
                 print(paciente)
                 return paciente
-        print(f"No se encontró paciente con dni: {dni_ingresado}.")
+        print(f"No se encontró paciente con dni: {dni_ingresado}. Puede registrarlo desde el menú Gestión de Pacientes en Menu Principal.")
         return None
 
 
@@ -271,7 +271,7 @@ class GestorMedicos:
                 print(f"Coincidencia exitosa.")
                 print(medico)
                 return medico
-        print(f"No se encontró medico con matricula: {matricula_ingresada}.")
+        print(f"No se encontró medico con matricula: {matricula_ingresada}. Puede registrarlo desde Gestión de Medicos en Menu Principal")
         return None
 
 
@@ -409,7 +409,6 @@ class GestorTurnos:
         return FechaHora(fecha_y_hora_ingresada)
 
 
-    #ES BOCETO AUN, REVISAR
     def agregarTurno(self):
         #aca la peticion de fecha y hora es sencilla porque toda la validacion está en los metodos aux
         fecha_y_hora_ingresada = self._pedir_fecha_y_hora_valida()
@@ -417,14 +416,12 @@ class GestorTurnos:
         #busqueda de paciente usando metodos del gestor de pacientes
         paciente_encontrado_por_dni = self.gestor_pacientes.buscarPacientePorDni()
         if not paciente_encontrado_por_dni:
-            print(f"No se encontró el paciente. Debe registrarlo desde el menú Gestión de Pacientes.")
             return
         dni_obtenido = paciente_encontrado_por_dni.dni
         
         #busqueda del medico usando metodos del gestor de medicos
         medico_encontrado_por_matricula = self.gestor_medicos.buscarMedicoPorMatricula()
         if not medico_encontrado_por_matricula:
-            print(f"No se encontró el medico. Debe registrarlo desde el menú Gestión de Medicos.")
             return
         matricula_obtenida = medico_encontrado_por_matricula.matricula
         
@@ -436,17 +433,26 @@ class GestorTurnos:
             break
 
 
-        nuevo_turno = Turno(fecha_y_hora_ingresada, dni_obtenido, matricula_obtenida, motivo_ingresado)
+        
         #muestro al usuario la lista de turnos
         self.listarTurnos()
         #recorro la lista buscando coincidencia entre horarios
+        #aca podria usar los metodos interno __eq__ y __hash_ que confirman que el objeto sea el mismo en memoria, pero no lo vimos
+        #por eso tengo que chequear que cada atributo coincida para determinar que es la misma fecha y hora 
         for turno in self.listaDeTurnos:
-            if fecha_y_hora_ingresada == turno.fechaYHora and matricula_obtenida == turno.medicoMatricula:
+            #el solapamiento solo se da si todos los atributos de fecha y hora coinciden
+            if fecha_y_hora_ingresada.dia == turno.fechaYHora.dia and \
+                fecha_y_hora_ingresada.mes == turno.fechaYHora.mes and \
+                fecha_y_hora_ingresada.anio == turno.fechaYHora.anio and \
+                fecha_y_hora_ingresada.hora == turno.fechaYHora.hora and \
+                fecha_y_hora_ingresada.minuto == turno.fechaYHora.minuto and \
+                matricula_obtenida == turno.medicoMatricula:
                 print("Este medico ya tiene un turno en este horario: ")
                 print(turno)
                 print("Deberá repetir la operación.")
                 return
-        #si no hubo coincidencias, agrego el turno a la lista
+        #si no hubo coincidencias, instancio un nuevo turno y lo agrego a la lista de turnos
+        nuevo_turno = Turno(fecha_y_hora_ingresada, dni_obtenido, matricula_obtenida, motivo_ingresado)
         self.listaDeTurnos.append(nuevo_turno)
         self._guardarListaTurnos()
         print(f"El turno {nuevo_turno}")
