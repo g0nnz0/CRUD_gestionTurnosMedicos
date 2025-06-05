@@ -418,8 +418,35 @@ class GestorTurnos:
 
 
     def agregarTurno(self):
+        fecha_y_hora_actual = FechaHora()
         #aca la peticion de fecha y hora es sencilla porque toda la validacion está en los metodos aux
+
         fecha_y_hora_ingresada = self._pedir_fecha_y_hora_valida()
+        # Validación de fecha futura
+        if fecha_y_hora_ingresada.anio < fecha_y_hora_actual.anio:
+            print("La fecha ingresada no puede ser menor a la fecha actual. Vuelve al menu de gestión de turnos")
+            return
+        
+        if fecha_y_hora_ingresada.anio == fecha_y_hora_actual.anio:
+            if fecha_y_hora_ingresada.mes < fecha_y_hora_actual.mes:
+                print("La fecha ingresada no puede ser menor a la fecha actual. Vuelve al menu de gestión de turnos")
+                return
+            
+            if fecha_y_hora_ingresada.mes == fecha_y_hora_actual.mes:
+                if fecha_y_hora_ingresada.dia < fecha_y_hora_actual.dia:
+                    print("La fecha ingresada no puede ser menor a la fecha actual. Vuelve al menu de gestión de turnos")
+                    return
+                
+                if fecha_y_hora_ingresada.dia == fecha_y_hora_actual.dia:
+                    if fecha_y_hora_ingresada.hora < fecha_y_hora_actual.hora:
+                        print("La fecha ingresada no puede ser menor a la fecha actual. Vuelve al menu de gestión de turnos")
+                        return
+                    
+                    if fecha_y_hora_ingresada.hora == fecha_y_hora_actual.hora:
+                        
+                        if fecha_y_hora_ingresada.minuto <= fecha_y_hora_actual.minuto: 
+                            print("La fecha ingresada no puede ser menor a la fecha actual. Vuelve al menu de gestión de turnos")
+                            return
 
         #busqueda de paciente usando metodos del gestor de pacientes
         paciente_encontrado_por_dni = self.gestor_pacientes.buscarPacientePorDni()

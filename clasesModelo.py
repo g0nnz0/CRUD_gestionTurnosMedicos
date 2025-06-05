@@ -86,4 +86,4 @@ class Turno:
         self.id = id
 
     def __str__(self):
-        return f"Id: {self.id} - Horario turno: {self.fechaYHora} - Paciente dni: {self.pacienteDni} - Medico matricula n°: {self.medicoMatricula} - Motivo del Turno: {self.motivoTurno}"
+        return f"Id: {self.id} - Horario turno: {self.fechaYHora} - Paciente Dni: {self.pacienteDni} - Medico matricula n°: {self.medicoMatricula} - Motivo del Turno: {self.motivoTurno}"
