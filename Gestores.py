@@ -480,6 +480,31 @@ class GestorTurnos:
         for turno in self.listaDeTurnos:
             print(turno)
 
+    def listar_turnos_filtrados(self, filtro: str):
+         if not self.listaDeTurnos:
+            print("No hay turnos cargados en este momento.")
+            return
+         if filtro == "paciente":
+            paciente_encontrado = self.gestor_pacientes.buscarPacientePorDni()
+            if paciente_encontrado is None:
+                print("No se encontró el paciente ingresado")
+                return
+            print(f"---Listado de turnos-- del paciente Nombre:{paciente_encontrado.nombre} - Dni: {paciente_encontrado.dni}---")
+            for turno in self.listaDeTurnos:           
+                    if paciente_encontrado.dni == turno.pacienteDni:
+                        print(turno)
+         elif filtro == "medico":
+            medico_encontrado = self.gestor_medicos.buscarMedicoPorMatricula()
+            if medico_encontrado is None:
+                print("No se encontró el medico ingresado.")
+                return
+            print(f"---Listado de turnos-- del medico Nombre:{medico_encontrado.nombre} - Matricula: {medico_encontrado.matricula}---")
+            for turno in self.listaDeTurnos:
+                    if medico_encontrado.matricula == turno.medicoMatricula:
+                        print(turno)
+            
+
+
     def listarTurnoPorPacienteOMedico(self):
         print("listarTurnoPorPacienteOMedico alcanzado")
         pass

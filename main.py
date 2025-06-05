@@ -64,7 +64,7 @@ class Main:
 
             submenu_turnos_opcion_seleccionada = submenu_turnos.pedirOpcionDeMenuValida()
             if submenu_turnos_opcion_seleccionada == 1:
-                self.gestor_turnos.listarTurnos()
+                self._submenuGestionTurnos_listados_por_filtro()
             elif submenu_turnos_opcion_seleccionada == 2:
                 self.gestor_turnos.buscarTurnoPorFecha()
             elif submenu_turnos_opcion_seleccionada == 3:
@@ -74,6 +74,22 @@ class Main:
             elif submenu_turnos_opcion_seleccionada == 5:
                 self.gestor_turnos._guardarListaTurnos()
             elif submenu_turnos_opcion_seleccionada == 6:
+                break
+
+    def _submenuGestionTurnos_listados_por_filtro(self):
+        submenu_turnos_por_filtro = Menu(["Listado completo (ordenado por id)", "Listado por paciente", "Listado por medico", "Volver"])
+
+        while True:
+            submenu_turnos_por_filtro.mostrarMenu("tipos de listados")
+
+            submenu_turnos_por_filtro_opcion_seleccionada = submenu_turnos_por_filtro.pedirOpcionDeMenuValida()
+            if submenu_turnos_por_filtro_opcion_seleccionada == 1:
+                self.gestor_turnos.listarTurnos()
+            elif submenu_turnos_por_filtro_opcion_seleccionada == 2:
+                self.gestor_turnos.listar_turnos_filtrados("paciente")
+            elif submenu_turnos_por_filtro_opcion_seleccionada == 3:
+                self.gestor_turnos.listar_turnos_filtrados("medico")
+            elif submenu_turnos_por_filtro_opcion_seleccionada == 4:
                 break
 
 
