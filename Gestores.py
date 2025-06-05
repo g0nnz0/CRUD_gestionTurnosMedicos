@@ -488,12 +488,47 @@ class GestorTurnos:
         print("buscarTurnoPorFecha alcanzado")
         pass
 
+    #metodo aux
+    def buscarTurnoPorId(self) -> Turno:
+        while True:
+            try:
+                id_ingresado = (input("Ingrese el id del turno que desea buscar: ")).strip()
+                id_ingresada_int = int(id_ingresado)
+                if id_ingresada_int <= 0:
+                    print("El id tiene que ser mayor a cero")
+                    continue
+                id_validado = id_ingresada_int
+                break
+            except ValueError:
+                print("El id debe ser un numero")
+            
+        for turno in self.listaDeTurnos:
+            if id_validado == turno.id:
+                print(f"Coincidencia exitosa.")
+                print(turno)
+                return turno
+        print(f"No se encontró turno con id: {id_validado}. Puede registrarlo desde el menú Gestión de Turnos en Menu Principal.")
+        return None
 
     
 
     def eliminarTurno(self):
-        print("EliminarTurno alcanzado")
-        pass
+        if not self.listaDeTurnos:
+            print("No hay turnos cargados")
+            return
+
+        turno_encontrado = self.buscarTurnoPorId()
+        if turno_encontrado:
+            opcion_seleccionada = input("Para confirmar la eliminación presione 'S', para cancelar presione 'N': ").strip().upper()
+            if opcion_seleccionada == 'S':
+                self.listaDeTurnos.remove(turno_encontrado)
+                self._guardarListaTurnos()
+                print(f"El turno {turno_encontrado}. Fué eliminado exitosamente de la base de datos.")
+            elif opcion_seleccionada == 'N':
+                print("No se efectuaron cambios.")
+                return
+            else:
+                print("Opción no valida. No se efectuaron cambios")
 
 
 
